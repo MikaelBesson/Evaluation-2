@@ -2,8 +2,10 @@
 
 class Item
 {
-    constructor()
+    constructor(name,addToLocal)
     {
+        this.check = false;
+
         //selection du div parent//
         //selection of parent div//
 
@@ -26,9 +28,19 @@ class Item
         this.item = document.createElement('span');
         this.divItem.append(this.item);
         this.item.className = 'title';
-        this.item.innerHTML = document.querySelector(".name").value;
+        this.item.innerHTML = name;
         this.divButton();
         document.querySelector(".name").value = '';
+
+        //pour enregistrer Item en localStorage//
+        //to save Item in localStorage//
+
+        if(addToLocal){
+            let olditems = JSON.parse(localStorage.getItem('itemsList')) || [];
+            let items = this.item.innerHTML;
+            olditems.push(items);
+            localStorage.setItem('itemsList',JSON.stringify(olditems));
+        }
     }
 
     //creation et ajout d'un div pour les bouton//
@@ -60,8 +72,14 @@ class Item
         //event to highlight the item in the list//
 
         this.checkButton.addEventListener("click", ()=>{
-            this.item.style.textDecoration = 'line-through';
-            this.item.style.textDecorationColor = 'red';
+            if(!this.check){
+                this.item.style.textDecoration = 'line-through';
+                this.item.style.textDecorationColor = 'red';
+            }
+            else {
+                this.item.style.textDecoration = 'none';
+            }
+            this.check = !this.check;
         })
     }
 
